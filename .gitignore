@@ -9,3 +9,4 @@ obj/
 
 # Configuração de ambiente
 appsettings.Development.json
+/ffg
