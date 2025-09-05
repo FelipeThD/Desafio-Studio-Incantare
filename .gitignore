@@ -1,0 +1,11 @@
+# Ignore Visual Studio files
+.vs/
+*.user
+*.suo
+
+# Build results
+bin/
+obj/
+
+# Configuração de ambiente
+appsettings.Development.json
