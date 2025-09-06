@@ -13,19 +13,26 @@ namespace BackendTraining.Repositories
             _connection = connection;
         }
 
-        public async Task<int> AddAsync(ContactsModel contact)
+        public async Task<Guid> AddAsync(ContactsModel contact)
         {
-            var sql = @"INSERT INTO contacts (name, email, message) VALUES (@Name, @Email, @Message)";
+            const string sql = @"
+                INSERT INTO contacts (id, name, email, message, created_at)
+                VALUES (@Id, @Name, @Email, @Message, @CreatedAt)
+                RETURNING id;
+            ";
 
-            return await _connection.ExecuteAsync(sql, contact);
+            if (contact.Id == Guid.Empty) contact.Id = Guid.NewGuid();
+            if (contact.CreatedAt == default) contact.CreatedAt = DateTime.UtcNow;
+
+            return await _connection.ExecuteScalarAsync<Guid>(sql, contact);
         }
 
-        //public async Task<ContactModel?> GetbyId(int id)
-        //{
-        //    var sql = @"INSERT INTO contacts (name, email, message) VALUES (@Name, @Email, @Message)";
+        public async Task<ContactsModel?> GetByIdAsync(Guid id)
+        {
+            const string sql = "SELECT id, name, email, message, created_at FROM contacts WHERE id = @Id";
 
-        //    return await _connection.QueryFirstOrDefaultAsync<ContactModel>(sql, id);
-        //}
+            return await _connection.QueryFirstOrDefaultAsync<ContactsModel>(sql, new { Id = id });
+        }
 
         public async Task<IEnumerable<ContactsModel>> GetAllAsync()
         {

@@ -1,4 +1,7 @@
 using BackendTraining.Repositories;
+using BackendTraining.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Npgsql;
 using System.Data;
 
@@ -12,12 +15,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ContactsRepository>();
+
 builder.Services.AddScoped<IDbConnection>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
     var connectionString = config.GetConnectionString("PgConnection");
     return new NpgsqlConnection(connectionString);
 });
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<ContactsValidator>();
+
+
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy =>
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
 
 var app = builder.Build();
 

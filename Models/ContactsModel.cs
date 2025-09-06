@@ -4,11 +4,13 @@ namespace BackendTraining.Models
 {
     public class ContactsModel
     {
+        public Guid Id { get; set; }
         [Required]
         public string Name { get; set; } = string.Empty;
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
         [MaxLength(500)]
         public string Message { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
