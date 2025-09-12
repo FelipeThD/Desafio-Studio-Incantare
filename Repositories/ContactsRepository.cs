@@ -4,7 +4,7 @@ using System.Data;
 
 namespace BackendTraining.Repositories
 {
-    public class ContactsRepository
+    public class ContactsRepository : IContactsRepository
     {
         private readonly IDbConnection _connection;
 

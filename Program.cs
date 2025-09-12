@@ -1,4 +1,5 @@
 using BackendTraining.Repositories;
+using BackendTraining.Services;
 using BackendTraining.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -14,14 +15,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ContactsRepository>();
-
 builder.Services.AddScoped<IDbConnection>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
     var connectionString = config.GetConnectionString("PgConnection");
     return new NpgsqlConnection(connectionString);
 });
+
+builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
+builder.Services.AddScoped<ContactService>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ContactsValidator>();

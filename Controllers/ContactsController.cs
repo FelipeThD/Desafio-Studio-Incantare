@@ -1,6 +1,7 @@
 ﻿using BackendTraining.Dtos;
 using BackendTraining.Models;
 using BackendTraining.Repositories;
+using BackendTraining.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackendTraining.Controllers
@@ -9,41 +10,25 @@ namespace BackendTraining.Controllers
     [Route("api/[controller]")]
     public class ContactsController : ControllerBase
     {
-        private readonly ContactsRepository _contactRepository;
-        public ContactsController(ContactsRepository repository)
+        private readonly ContactService _service;
+        public ContactsController(ContactService service)
         {
-            _contactRepository = repository;
+            _service = service;
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Post(ContactsModel contact)
-        //{
-        //    await _contactRepository.AddAsync(contact);
-
-        //    return Ok("Contato Inserido com Sucesso!");
-        //}
-
         [HttpPost]
-        public async Task<IActionResult> PostDto(CreateContactDto contactdto)
+        public async Task<IActionResult> Post(CreateContactDto contactDto)
         {
-            var contact = new ContactsModel
-            {
-                Id = Guid.NewGuid(),
-                Name = contactdto.Name,
-                Email = contactdto.Email,
-                Message = contactdto.Message,
-                CreatedAt = DateTime.UtcNow
-            };
 
-            var id = await _contactRepository.AddAsync(contact);
+            var id = await _service.AddAsync(contactDto);
 
             return CreatedAtRoute("GetContactById", new { id }, new { id });
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-            var contacts = await _contactRepository.GetAllAsync();
+            var contacts = await _service.GetAllAsync();
 
             return Ok(contacts);
         }
@@ -51,7 +36,7 @@ namespace BackendTraining.Controllers
         [HttpGet("{id}", Name = "GetContactById")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var contact = await _contactRepository.GetByIdAsync(id);
+            var contact = await _service.GetByIdAsync(id);
 
             if (contact == null) return NotFound();
 
