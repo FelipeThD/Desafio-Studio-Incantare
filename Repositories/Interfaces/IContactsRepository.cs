@@ -1,6 +1,6 @@
 ﻿using BackendTraining.Models;
 
-namespace BackendTraining.Repositories
+namespace BackendTraining.Repositories.Interfaces
 {
     public interface IContactsRepository
     {
@@ -9,4 +9,3 @@ namespace BackendTraining.Repositories
         Task<IEnumerable<ContactsModel>> GetAllAsync();
     }
 }
-                                                                                                                                                                                      

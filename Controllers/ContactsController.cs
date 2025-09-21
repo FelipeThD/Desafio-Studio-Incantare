@@ -10,8 +10,8 @@ namespace BackendTraining.Controllers
     [Route("api/[controller]")]
     public class ContactsController : ControllerBase
     {
-        private readonly ContactService _service;
-        public ContactsController(ContactService service)
+        private readonly ContactsService _service;
+        public ContactsController(ContactsService service)
         {
             _service = service;
         }

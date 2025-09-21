@@ -1,4 +1,5 @@
 ﻿using BackendTraining.Models;
+using BackendTraining.Repositories.Interfaces;
 using Dapper;
 using System.Data;
 

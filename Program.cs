@@ -1,4 +1,5 @@
 using BackendTraining.Repositories;
+using BackendTraining.Repositories.Interfaces;
 using BackendTraining.Services;
 using BackendTraining.Validators;
 using FluentValidation;
@@ -23,7 +24,11 @@ builder.Services.AddScoped<IDbConnection>(sp =>
 });
 
 builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
-builder.Services.AddScoped<ContactService>();
+builder.Services.AddScoped<ContactsService>();
+
+builder.Services.AddScoped<IUserRepository, UsersRepository>();
+builder.Services.AddScoped<UsersService>();
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ContactsValidator>();

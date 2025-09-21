@@ -1,13 +1,13 @@
 ﻿using BackendTraining.Dtos;
 using BackendTraining.Models;
-using BackendTraining.Repositories;
+using BackendTraining.Repositories.Interfaces;
 
 namespace BackendTraining.Services
 {
-    public class ContactService
+    public class ContactsService
     {
         private readonly IContactsRepository _repository;
-        public ContactService(IContactsRepository repository)
+        public ContactsService(IContactsRepository repository)
         {
             _repository = repository;
         }
