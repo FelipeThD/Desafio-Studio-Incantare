@@ -1,8 +1,8 @@
 ﻿using BackendTraining.Dtos;
-using BackendTraining.Models;
-using BackendTraining.Repositories;
 using BackendTraining.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BackendTraining.Controllers
 {
@@ -17,6 +17,8 @@ namespace BackendTraining.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [SwaggerOperation(Tags = new[] { "Público - Contatos" }, Summary = "Cria um novo contato.")]
         public async Task<IActionResult> Post(CreateContactDto contactDto)
         {
 
@@ -26,14 +28,29 @@ namespace BackendTraining.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [SwaggerOperation(Tags = new[] { "Protegido - Contatos" }, Summary = "Lista todos os contatos por ordem de criação.")]
         public async Task<IActionResult> GetAll()
         {
             var contacts = await _service.GetAllAsync();
 
-            return Ok(contacts);
+            var result = contacts
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(x => new ResponseContactDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Email = x.Email,
+                    Message = x.Message,
+                    CreatedAt = x.CreatedAt,
+                });
+
+            return Ok(result);
         }
 
         [HttpGet("{id}", Name = "GetContactById")]
+        [AllowAnonymous]
+        [SwaggerOperation(Tags = new[] { "Público - Contatos" }, Summary = "Busca contato por id.")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var contact = await _service.GetByIdAsync(id);
