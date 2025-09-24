@@ -41,12 +41,15 @@ builder.Services.AddSwaggerGen(c =>
     c.EnableAnnotations();
 });
 
-builder.Services.AddScoped<IDbConnection>(sp =>
-{
-    var config = sp.GetRequiredService<IConfiguration>();
-    var connectionString = config.GetConnectionString("PgConnection");
-    return new NpgsqlConnection(connectionString);
-});
+//builder.Services.AddScoped<IDbConnection>(sp =>
+//{
+//    var config = sp.GetRequiredService<IConfiguration>();
+//    var connectionString = config.GetConnectionString("PgConnection");
+//    return new NpgsqlConnection(connectionString);
+//});
+
+var connectionString = Environment.GetEnvironmentVariable("PgConnection");
+builder.Services.AddScoped<IDbConnection>(sp => new NpgsqlConnection(connectionString));
 
 // Contacts
 builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
