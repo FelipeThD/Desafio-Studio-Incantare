@@ -9,14 +9,12 @@ namespace BackendTraining.Infrastructure.Swagger
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             // Verifica se o método ou controlador tem [Authorize]
-            var hasAuthorize = context.MethodInfo.DeclaringType
-                                  .GetCustomAttributes(true)
-                                  .OfType<AuthorizeAttribute>()
-                                  .Any()
-                               || context.MethodInfo
-                                  .GetCustomAttributes(true)
-                                  .OfType<AuthorizeAttribute>()
-                                  .Any();
+            var hasAuthorize = (context.MethodInfo.DeclaringType?.GetCustomAttributes(true)
+                                    .OfType<AuthorizeAttribute>()
+                                    .Any() ?? false)
+                               || (context.MethodInfo?.GetCustomAttributes(true)
+                                    .OfType<AuthorizeAttribute>()
+                                    .Any() ?? false);
 
             if (hasAuthorize)
             {
