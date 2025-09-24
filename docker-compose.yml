@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=studio_incantare;Username=postgres;Password=12345
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: studio_incantare
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
