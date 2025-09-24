@@ -1,19 +1,31 @@
 version: "3.9"
+
 services:
-  backend:
+  web:
     build: .
+    container_name: backendtraining_app
     ports:
-      - "5000:5000"
+      - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=studio_incantare;Username=postgres;Password=12345
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+    depends_on:
+      - db
 
   db:
     image: postgres:15
+    container_name: backendtraining_db
     restart: always
     environment:
-      POSTGRES_DB: studio_incantare
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres123
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: backendtraining
     ports:
       - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
