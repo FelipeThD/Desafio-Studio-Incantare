@@ -48,15 +48,23 @@ builder.Services.AddScoped<IDbConnection>(sp =>
     return new NpgsqlConnection(connectionString);
 });
 
+// Contacts
 builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
 builder.Services.AddScoped<ContactsService>();
 
+// Login
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<TokenService>();
 
+// Team members
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
+builder.Services.AddScoped<TeamService>();
+
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ContactsValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<TeamValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UsersValidator>();
 
 
 builder.Services.AddCors(options =>
