@@ -1,26 +1,17 @@
-# --------- Build Stage ---------
+# Etapa de build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia apenas o arquivo de projeto e restaura dependências
-COPY BackendTraining/BackendTraining.csproj ./BackendTraining/
-RUN dotnet restore ./BackendTraining/BackendTraining.csproj
+# Copia apenas o arquivo de projeto e restaura as dependências
+COPY BackendTraining.csproj ./
+RUN dotnet restore
 
-# Copia todo o código do projeto
-COPY BackendTraining/. ./BackendTraining/
+# Copia o restante do código
+COPY . ./
+RUN dotnet publish -c Release -o /app
 
-# Publica a aplicação em Release para pasta /app/publish
-RUN dotnet publish ./BackendTraining/BackendTraining.csproj -c Release -o /app/publish
-
-# --------- Runtime Stage ---------
+# Etapa de runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-
-# Copia o output publicado do build stage
-COPY --from=build /app/publish .
-
-# Expõe a porta padrão da API
-EXPOSE 5000
-
-# Define o entrypoint da aplicação
+COPY --from=build /app ./
 ENTRYPOINT ["dotnet", "BackendTraining.dll"]
