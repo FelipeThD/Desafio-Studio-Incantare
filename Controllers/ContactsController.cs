@@ -17,7 +17,6 @@ namespace BackendTraining.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [SwaggerOperation(Tags = new[] { "Público - Contatos" }, Summary = "Cria um novo contato.")]
         public async Task<IActionResult> Post(CreateContactDto contactDto)
         {
@@ -34,22 +33,10 @@ namespace BackendTraining.Controllers
         {
             var contacts = await _service.GetAllAsync();
 
-            var result = contacts
-                .OrderByDescending(x => x.CreatedAt)
-                .Select(x => new ResponseContactDto
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Email = x.Email,
-                    Message = x.Message,
-                    CreatedAt = x.CreatedAt,
-                });
-
-            return Ok(result);
+            return Ok(contacts);
         }
 
         [HttpGet("{id}", Name = "GetContactById")]
-        [AllowAnonymous]
         [SwaggerOperation(Tags = new[] { "Público - Contatos" }, Summary = "Busca contato por id.")]
         public async Task<IActionResult> GetById(Guid id)
         {

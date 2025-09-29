@@ -38,3 +38,6 @@ CREATE TABLE users (
     username VARCHAR(150) NOT NULL UNIQUE,
     password_hash TEXT NOT NULL
 );
+
+INSERT INTO users (username, password_hash)
+VALUES ('admin@incantare.com', '$2a$11$fglQXYOLOvwzhga5DjBXQOoN23NvCrVVqaj7eH.hoIDRhn20LqNYK')

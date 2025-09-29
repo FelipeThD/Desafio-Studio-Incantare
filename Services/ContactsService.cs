@@ -45,7 +45,7 @@ namespace BackendTraining.Services
         {
             var contacts = await _repository.GetAllAsync();
 
-            return contacts.Select(c => new ResponseContactDto
+            return contacts.OrderByDescending(c => c.CreatedAt).Select(c => new ResponseContactDto
             {
                 Id = c.Id,
                 Name = c.Name,

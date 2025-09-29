@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Npgsql;
 using System.Data;
 using System.Text;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,15 +42,17 @@ builder.Services.AddSwaggerGen(c =>
     c.EnableAnnotations();
 });
 
-//builder.Services.AddScoped<IDbConnection>(sp =>
-//{
-//    var config = sp.GetRequiredService<IConfiguration>();
-//    var connectionString = config.GetConnectionString("PgConnection");
-//    return new NpgsqlConnection(connectionString);
-//});
+Env.Load();
 
-var connectionString = Environment.GetEnvironmentVariable("PgConnection");
-builder.Services.AddScoped<IDbConnection>(sp => new NpgsqlConnection(connectionString));
+// Configura conexão com PostgreSQL
+builder.Services.AddScoped<IDbConnection>(sp =>
+{
+    var connectionString = Environment.GetEnvironmentVariable("PgConnection");
+    if (string.IsNullOrEmpty(connectionString))
+        throw new InvalidOperationException("A variável de ambiente 'PgConnection' não está definida.");
+
+    return new NpgsqlConnection(connectionString);
+});
 
 // Contacts
 builder.Services.AddScoped<IContactsRepository, ContactsRepository>();
